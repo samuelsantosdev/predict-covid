@@ -1,0 +1,97 @@
+version: '3'
+
+services: 
+  model:
+    container_name: model
+    env_file:
+      - ./model/.env
+    image: samuelsantosdev/predict_covid:model-0.0.1
+    restart: always
+    depends_on: 
+      - elasticsearch
+      - fluentd_server
+    links: 
+      - fluentd_server
+    build: 
+      context: ./model
+      dockerfile: Dockerfile
+    volumes: 
+      - ./model:/var/task
+      - ./datalake:/var/task/src/datalake:rw
+    networks:
+      - elastic
+
+  fluentd_server:
+    container_name: fluentd_server
+    env_file:
+      - fluentd/.env
+    build:
+      context: ./fluentd
+      dockerfile: Dockerfile
+    restart: always
+    image: samuelsantosdev/predict_covid:fluentd_server-0.0.1
+    ports:
+      - 9880:9880
+    volumes: 
+      - ./fluentd/tmp:/fluentd/etc
+    depends_on: 
+      - elasticsearch
+    links: 
+      - elasticsearch
+    networks:
+      - elastic
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:6.8.2
+    restart: always
+    links: 
+      - elasticsearch
+    depends_on: 
+      - elasticsearch
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - elastic
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:6.8.2
+    restart: always
+    networks:
+      - elastic
+    ports:
+      - 9200:9200
+    environment: 
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - KEYSTORE_PASSWORD=qwe123
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data:rw
+
+  web:
+    container_name: web
+    image: samuelsantosdev/predict_covid:web-0.0.1
+    env_file:
+      - web/.env
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - 5000:5000
+    command: "flask run --host=0.0.0.0"
+    volumes:
+      - ./web:/var/task
+      - ./datalake/images:/var/task/src/static
+      
+volumes:
+  esdata1:
+    driver: local
+    
+networks:
+  elastic:
+    driver: bridge
