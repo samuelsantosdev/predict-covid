@@ -1,10 +1,10 @@
 # Desafio Predict Covid
 
-![Teste de variáveis](https://bitbucket.org/samuelsantosdev/poc-predict-covid/raw/d44fb224df3f0b4cc448af35e40a97ff50072074/doc/predict_covid.png)
+![Teste de variáveis](https://raw.githubusercontent.com/samuelsantosdev/predict-covid/master/datalake/images/forecast_data.png)
 
 ## Dependências
-* Docker version 19.03.6, build 369ce74a3c
-* docker-compose version 1.17.1, build unknown
+* Docker version 19.03.6
+* docker-compose version 1.17.1
 
 #### Para iniciar o projeto, na raiz do projeto execute:
 ```
@@ -93,10 +93,10 @@ salva no datalake como datalake/results/columns.json
 
 Dessa forma toda nova predição seguirá essas colunas e não as colunas definidas no *COLUMNS_PREDICT*
 
-![Teste de variáveis](https://bitbucket.org/samuelsantosdev/poc-predict-covid/raw/70dab47e3833fad4634b397b03d8f29cbc471b1c/doc/testing_vars.gif)
+![Teste de variáveis](https://raw.githubusercontent.com/samuelsantosdev/predict-covid/master/doc/testing_vars.gif)
 
 
-# Fluetd
+# Fluentd
 
 Nesse projeto inclui o fluentd, onde todos os logs gerados pelo projeto model, são enviados para elasticsearch, mas podemos alterar o driver do fluentd e salvar esses logs em outro lugar, como arquivo de texto, banco de dados etc...
 
