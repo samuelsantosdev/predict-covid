@@ -1,4 +1,4 @@
-# Desafio Predict Covid
+# Predict Covid
 
 ![Teste de variáveis](https://raw.githubusercontent.com/samuelsantosdev/predict-covid/master/datalake/images/forecast_data.png)
 
@@ -101,16 +101,3 @@ Dessa forma toda nova predição seguirá essas colunas e não as colunas defini
 Nesse projeto inclui o fluentd, onde todos os logs gerados pelo projeto model, são enviados para elasticsearch, mas podemos alterar o driver do fluentd e salvar esses logs em outro lugar, como arquivo de texto, banco de dados etc...
 
 Isso nos auxilia para atuar no troubleshooting.
-
-# Se fôssemos publicar, qual seria sua proposta de arquitetura?
-Utilizaria mais o que menos o que foi feito nesse projeto, um datalake na estrutura já apresentada, um job que executaria o treino todos a semana, e um serviço para expor o dados, podendo ser o elasticsearch, redis ou até um banco relacional dependendo dos custos.
-
-
-# E de infraestrutura?
-Isso depende muito de budget, na minha opinião utilizar o TensorFlow na GCP ajuda muito tanto na predição, quanto na qualidade para treinar um modelo,
-porém isso tem um custo que as vezes não compensa por projeto, a GCP tem um custo em impostos mais baratos, porém seus serviços são mais caros porém com mais opções.
-
-Podemos reduzir um pouco os gastos utilizando o SageMaker na AWS (que é o tensorflow), porém isso também depende de budget, visto que a AWS tem impostos mais caros sobre o serviço prestado.
-
-Nos projetos que atuo, economozamos ao máximo, e por isso utilizamos o Kubernetes com máquina para treino, como datalake o S3, e dependendo do projeto o SQS para que cada serviço escute uma fila, e segue seu trabalho de predição ou classificação persistindo o resultado no ELK, isso já nos ajuda com o fluentd, onde podemos varificar a saúde dos projetos com os logs.
-
